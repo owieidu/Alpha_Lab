@@ -1,38 +1,19 @@
-class ModeToggle:
-    def __init__(self):
-        self.safe_mode = True  # Começa no Safe Mode
+from flask import Flask, request, jsonify
+import os
 
-    def toggle_mode(self):
-        self.safe_mode = not self.safe_mode
-        mode = "Safe Mode" if self.safe_mode else "Free Mode"
-        print(f"✅ Modo alterado para: {mode}")
+app = Flask(__name__)
 
-    def get_response(self, input_text):
-        if self.safe_mode:
-            return self.safe_response(input_text)
-        else:
-            return self.free_response(input_text)
+# Rota principal da API
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({"message": "🚀 Alpha está online!"})
 
-    def safe_response(self, input_text):
-        return f"[Safe Mode] Resposta segura para: {input_text}"
-
-    def free_response(self, input_text):
-        return f"[Free Mode] Resposta livre para: {input_text}"
-
-
-def main():
-    mode_toggle = ModeToggle()
-    print("🚀 Alpha iniciado! (Digite 'toggle' para mudar de modo, 'sair' para encerrar)")
-
-    while True:
-        user_input = input(">> ")
-        if user_input.lower() == 'sair':
-            break
-        elif user_input.lower() == 'toggle':
-            mode_toggle.toggle_mode()
-        else:
-            print(mode_toggle.get_response(user_input))
-
+@app.route("/alpha", methods=["POST"])
+def alpha_chat():
+    data = request.json
+    user_input = data.get("input", "")
+    return jsonify({"response": f"[Free Mode] Resposta livre para: {user_input}"})
 
 if __name__ == "__main__":
-    main()
+    port = int(os.environ.get("PORT", 8080))  # Railway usa variável de ambiente PORT
+    app.run(host="0.0.0.0", port=port)
