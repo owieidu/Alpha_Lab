@@ -1,6 +1,1 @@
-openai
-requests
 rich
-python-dotenv
-speechrecognition
-pyttsx3
